@@ -10,3 +10,164 @@ datasource db {
     url          = env("DATABASE_URL")
     relationMode = "prisma"
 }
+
+// Necessary for Next auth
+model Account {
+    id                String   @id @default(cuid())
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String?  @db.Text
+    access_token      String?  @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String?  @db.Text
+    session_state     String?
+    user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId            String
+    createdAt         DateTime @default(now())
+    updatedAt         DateTime @updatedAt
+
+    @@unique([provider, providerAccountId])
+    @@unique([provider, userId])
+    @@index([userId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String
+
+    @@index([userId])
+}
+
+model User {
+    id               String             @id @default(cuid())
+    username         String?            @unique
+    name             String?
+    email            String?            @unique
+    emailVerified    DateTime?
+    image            String?
+    bio              String?
+    mediaFolder      String
+    role             Role
+    accounts         Account[]
+    sessions         Session[]
+    Prompt           Prompt[]
+    Media            Media[]
+    Chat             Chat[]
+    SocialMediaLinks SocialMediaLinks[]
+    Preferences      Settings[]
+    createdAt        DateTime           @default(now())
+    updatedAt        DateTime           @updatedAt
+
+    @@index([username])
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+model Prompt {
+    id             String   @id @default(cuid())
+    user           User     @relation(fields: [userId], references: [id])
+    userId         String
+    prompt         String
+    negativePrompt String
+    modelName      String
+    samplerIndex   String
+    seed           BigInt
+    batch          Int
+    steps          Int
+    cfg_scale      Int
+    width          Int
+    height         Int
+    promptData     Json
+    createdAt      DateTime @default(now())
+
+    @@index([userId])
+}
+
+model Media {
+    id        String    @id @default(cuid())
+    user      User      @relation(fields: [userId], references: [id])
+    userId    String
+    filename  String
+    mediaType MediaType
+    nsfw      Boolean
+    public    Boolean
+    createdAt DateTime  @default(now())
+
+    @@index([userId])
+}
+
+model Chat {
+    id        String   @id @default(cuid())
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String
+    chatData  Json
+    createdAt DateTime @default(now())
+
+    @@index([userId])
+}
+
+model Settings {
+    id            String   @id @default(cuid())
+    user          User     @relation(fields: [userId], references: [id])
+    userId        String
+    allowNsfw     Boolean
+    promptHistory Boolean
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    @@index([userId])
+}
+
+enum Role {
+    USER
+    EDITOR
+    ADMIN
+}
+
+enum MediaType {
+    IMAGE
+    VIDEO
+    ASSET3D
+}
+
+enum ChatRole {
+    AI
+    USER
+    SYSTEM
+}
+
+enum SocialMediaType {
+    FACEBOOK
+    TWITTER
+    INSTAGRAM
+    GOOGLE
+    GITHUB
+    LINKEDIN
+    DISCORD
+    OTHER
+}
+
+model SocialMediaLinks {
+    id              String          @id @default(cuid())
+    user            User            @relation(fields: [userId], references: [id])
+    userId          String
+    socialMediaType SocialMediaType
+    link            String
+    otherSpecify    String
+    createdAt       DateTime        @default(now())
+    updatedAt       DateTime        @updatedAt
+
+    @@index([userId])
+}
