@@ -1,3 +1,4 @@
+import { NextPageContext } from 'next';
 import { createGetInitialProps } from '@mantine/next';
 import Document, { Head, Html, Main, NextScript, DocumentContext } from 'next/document';
 import { ServerStyles, createStylesServer } from '@mantine/next';
@@ -7,8 +8,8 @@ const getInitialProps = createGetInitialProps();
 const stylesServer = createStylesServer();
 
 export default class _Document extends Document {
-    static async getInitialProps(ctx: any) {
-        const initialProps = await Document.getInitialProps(ctx);
+    static async getInitialProps(ctx: NextPageContext) {
+        const initialProps = await Document.getInitialProps(ctx as DocumentContext);
 
         // Add your app specific logic here
 

@@ -72,25 +72,25 @@ export default function Generate(props: Partial<DropzoneProps>) {
         height: number;
     }
 
-    const handleWidthSliderChange = (value: number | number[]) => {
-        console.log("handling width slider value: " + value)
-        setWidthSliderValue(value as number);
+    const handleWidthSliderChange = (value: number) => {
+        console.log(`handling width slider value: ${value}`)
+        setWidthSliderValue(value);
     };
 
-    const handleHeightSliderChange = (value: number | number[]) => {
-        console.log("handling height slider value: " + value)
-        setHeightSliderValue(value as number);
+    const handleHeightSliderChange = (value: number) => {
+        console.log(`handling height slider value: ${value}`)
+        setHeightSliderValue(value);
     };
 
-    const handleImageCountSliderChange = (value: number | number[]) => {
-        console.log("handling image count slider value: " + value)
-        setImageCountSliderValue(value as number);
+    const handleImageCountSliderChange = (value: number) => {
+        console.log(`handling image count slider value: ${value}`)
+        setImageCountSliderValue(value);
     };
 
     const handleAspectRatioChange = (size: Size) => {
         console.log(`handling aspect ratio change: ${size.width}, ${size.height}`)
-        setWidthSliderValue(size.width as number);
-        setHeightSliderValue(size.height as number);
+        setWidthSliderValue(size.width);
+        setHeightSliderValue(size.height);
     };
 
     return (
@@ -130,7 +130,7 @@ export default function Generate(props: Partial<DropzoneProps>) {
                                 label={(value) => value.toFixed(1)}
                                 step={1}
                                 labelAlwaysOn
-                                onChange={(value) => { console.log("CFG Scale: " + value) }}
+                                onChange={(value) => { console.log(`CFG Scale: ${value}`) }}
                             />
                             <Text size="xs" mt={20} pt={10} weight={500}>Images to Generate</Text>
                             <Slider
@@ -141,7 +141,7 @@ export default function Generate(props: Partial<DropzoneProps>) {
                                 label={(value) => value.toFixed(1)}
                                 step={1}
                                 labelAlwaysOn
-                                onChange={(value) => { handleImageCountSliderChange(value as number); }}
+                                onChange={(value) => { handleImageCountSliderChange(value); }}
                             />
                             <Text size="xs" mt={20} pt={10} weight={500}>Steps</Text>
                             <Slider
@@ -164,7 +164,7 @@ export default function Generate(props: Partial<DropzoneProps>) {
                                 label={(value) => value.toFixed(1)}
                                 step={64}
                                 labelAlwaysOn
-                                onChange={(value) => handleHeightSliderChange(value as number)}
+                                onChange={(value) => handleHeightSliderChange(value)}
                             />
                             <Text size="xs" mt={20} pt={10} weight={500}>Width</Text>
                             <Slider
@@ -176,7 +176,7 @@ export default function Generate(props: Partial<DropzoneProps>) {
                                 label={(value) => value.toFixed(1)}
                                 step={64}
                                 labelAlwaysOn
-                                onChange={(value) => handleWidthSliderChange(value as number)}
+                                onChange={(value) => handleWidthSliderChange(value)}
                             />
                             <Select
                                 id="aspect-ratio-select"
